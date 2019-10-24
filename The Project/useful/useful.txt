@@ -1,0 +1,33 @@
+
+1)	Edit .mat (MatLab) Files online -require regesteration with univercity email-
+	https://matlab.mathworks.com/
+	
+2)	Swap rows and columns of a DataFrame in pandas
+	
+	+---------------------------+
+	|	DataFrame.transpose()	|
+	+---------------------------+
+	
+3) 	Add a column to existing DataFrame in pandas
+	https://www.geeksforgeeks.org/adding-new-column-to-existing-dataframe-in-pandas/
+	
+4) 	Convert a group of data (a table like) whose values is of type "cell" in matlab to csv file (write the code in matlab online)
+
+	+-------------------------------------------------------+
+	|	data_group = load('matlab_file_name.mat');			|
+	|														|
+	|	c = data_group.matlab_file_name.data_group_name;	|
+	|														|	
+	|	T = cell2table(c(2:end,:),'VariableNames',c(1,:));	|
+	|	 													|			
+	|	writetable(T,'output_file_name.csv');				|
+	+-------------------------------------------------------+
+	
+5) 	Convert a group of data (a table like) whose values is of type "double" in matlab to csv file (write the code in matlab online)
+	
+	+-----------------------------------------------------------------------------------+
+	|	data_group = load('matlab_file_name.mat');										|
+	|																					|
+	|	csvwrite('output_file_name.csv', data_group.matlab_file_name.data_group_name);	|
+	+-----------------------------------------------------------------------------------+
+	

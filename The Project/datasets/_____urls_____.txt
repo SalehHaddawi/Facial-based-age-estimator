@@ -1,0 +1,8 @@
+this file contains urls to dataset websites
+
+
+1) 	IMDB-WIKI – 500k+ face images with age and gender labels
+	https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/
+	
+2)	Selfie Data Set
+	https://www.crcv.ucf.edu/data/Selfie/
