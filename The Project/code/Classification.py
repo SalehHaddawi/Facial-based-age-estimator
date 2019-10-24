@@ -1,20 +1,7 @@
 import pandas as pd
 import shutil
+import os
 
-photo_taken_columns = pd.read_csv('photo_taken.csv', sep=",")
-photo_taken_rows = photo_taken_columns.transpose()
-
-date_of_birth_columns = pd.read_csv('dob.csv', sep=",")
-date_of_birth_rows = date_of_birth_columns.transpose()
-
-full_path_columns = pd.read_csv('full_path1.csv', sep=",")
-full_path_rows = full_path_columns.transpose()
-
-ss = pd.DataFrame({'full_path': full_path_rows.index.values,
-                   'date_birth': date_of_birth_rows.index.values,
-                   'photo_taken_date': photo_taken_rows.index.values})
-
-print('ss')
 
 # rows = dataset.iloc[:, [0, 4, 5, 6, 7, 8, 9]].values
 #
@@ -40,3 +27,49 @@ print('ss')
 #         if os.path.isfile('images/' + row[0] + '.jpg'):
 #             shutil.move('images/'+row[0]+'.jpg', 'senior/'+row[0]+'.jpg')
 #
+
+
+
+
+# For Wiki Images Classification..
+
+
+
+folders = os.listdir('wiki_crop')
+missingImages = []
+for folder in folders:
+        if str(folder) == 'wiki.mat':
+                break
+
+        for file in os.listdir('wiki_crop/'+folder):
+                filename = file.split('_')
+                date_birth = filename[1].split('-')
+                date_taket = filename[2].split('.')[0]
+                print([date_birth,date_taket])
+
+                try:
+                        if int(date_birth[2]) == 00:
+                                date_birth[2] = int(date_birth[2]) + 1
+                        if int(date_birth[1]) > 12:
+                                date_birth[1],date_birth[2] = date_birth[2],date_birth[1]
+                        date_brith = datetime.datetime(int(date_birth[0]), int(date_birth[1]),int(date_birth[2]))
+                        date_taket = datetime.datetime(int(date_taket), 6, 15)
+                        age = math.ceil(((date_taket - date_brith ).days)/365)
+                except:
+                        missingImages.append([folder,file])
+
+                if 0 < age < 4:
+                        shutil.copy('wiki_crop/'+str(folder)+'/'+str(file),'baby/'+str(file))
+                if 6 < age < 16:
+                        shutil.copy('wiki_crop/'+str(folder)+'/'+str(file),'child/'+str(file))
+                if 17 < age < 20:
+                        shutil.copy('wiki_crop/'+str(folder)+'/'+str(file),'teenager/'+str(file))
+                if 21 < age < 32:
+                        shutil.copy('wiki_crop/'+str(folder)+'/'+str(file),'youth/'+str(file))
+                if 33 < age < 65:
+                        shutil.copy('wiki_crop/'+str(folder)+'/'+str(file),'middle_age/'+str(file))
+                if 66 < age:
+                        shutil.copy('wiki_crop/'+str(folder)+'/'+str(file),'senior/'+str(file))
+                print([folder,file,age])
+
+print(len(missingImages))
