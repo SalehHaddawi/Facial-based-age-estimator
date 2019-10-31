@@ -18,6 +18,7 @@ img = image.img_to_array(img)
 img = np.expand_dims(img, axis=0)
 
 images = np.vstack([img])
+print(type(images))
 img_class = model.predict_classes(images)
 
 print(img_class)
