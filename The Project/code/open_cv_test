@@ -1,61 +1,31 @@
+from FacialBasedAgeEstimator import FacialBasedAgeEstimator
 import cv2
-
-
-def detect_faces(cascade, image, scaleFactor=1.1):
-    # create a copy of the image to prevent any changes to the original one.
-    # image_copy = test_image.copy()
-
-    # convert the test image to gray scale as opencv face detector expects gray images
-    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # Applying the haar classifier to detect faces
-    faces = cascade.detectMultiScale(gray_image, scaleFactor=scaleFactor, minNeighbors=5)
-
-    return faces
-
-
-def draw_rect_and_text(face, image, text=""):
-    x, y, w, h = face
-    cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    cv2.putText(image, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
-
 
 # ------------------------------ MAIN -------------------------------
 
 # load the module
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
-# open laptop camera
-cap = cv2.VideoCapture(0)
+# ------------ STATIC IMAGES --------------
+# scaleFactor = 1.02
+#
+# fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
+#
+# img = cv2.imread("family.jpg")
+#
+# cv2.waitKey(0)
+#
+# result = fbae.predict_image(img)
+#
+# cv2.imshow("img", result)
+#
+# cv2.waitKey(0)
 
-# uncomment line below for static images
-# img = cv2.imread('test.jpg')
+# ------------ VIDEOS & WEB CAM --------------
+scaleFactor = 1.15
 
-while True:
-    # get the image from capture
-    ret, img = cap.read()
+fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
 
-    faces_rects = detect_faces(face_cascade, img, 1.2)
+# put 0 for web cam
+fbae.predict_video("bb.mp4")
 
-    for face in faces_rects:
-        x, y, w, h = face
-
-        clipped_image = img[y:y + h, x:x + w]
-
-        # send the image to the prediction module
-
-        # save the predicted age
-        age = "youth"
-
-        draw_rect_and_text(face, image=img, text=age)
-
-    # show the original image
-    cv2.imshow('img', img)
-
-    # if [esc] is pressed
-    k = cv2.waitKey(30) & 0xff
-    if k == 27:
-        break
-
-cap.release()
-cv2.destroyAllWindows()
