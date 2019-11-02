@@ -24,32 +24,35 @@ class FacialBasedAgeEstimator:
         return image
 
     # if source is 0 then its a web cam
-    def predict_video(self, source=0):
-        fvs = VideoStream(source, self).start()
+    def predict_video(self, source=0, sync=False):
+        fvs = VideoStream(source=source, fbae=self, sync=sync).start()
 
-        time.sleep(1.0)
+        if not sync:
 
-        # loop over frames from the video file stream
-        while fvs.more():
+            time.sleep(1.0)
 
-            # grab the frame from the threaded video file stream
-            frame = fvs.read()
+            # loop over frames from the video file stream
+            while fvs.more():
 
-            cv2.imshow("Frame", frame)
+                # grab the frame from the threaded video file stream
+                frame = fvs.read()
 
-            cv2.waitKey(1)
+                cv2.imshow("Frame", frame)
 
-            # if [esc] is pressed
-            k = cv2.waitKey(30) & 0xff
-            if k == 27:
-                break
+                cv2.waitKey(1)
+
+                # if [esc] is pressed
+                k = cv2.waitKey(30) & 0xff
+                if k == 27:
+                    break
 
     def detect_faces(self, image):
         # convert the test image to gray scale as opencv face detector expects gray images
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         # Applying the haar classifier to detect faces
-        faces = self.cascade.detectMultiScale(gray_image, scaleFactor=self.scaleFactor, minNeighbors=6, minSize=(30, 30))
+        faces = self.cascade.detectMultiScale(gray_image, scaleFactor=self.scaleFactor, minNeighbors=6,
+                                              minSize=(30, 30))
 
         return faces
 

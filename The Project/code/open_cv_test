@@ -27,5 +27,5 @@ scaleFactor = 1.15
 fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
 
 # put 0 for web cam
-fbae.predict_video("bb.mp4")
+fbae.predict_video(source="london_walk.mp4", sync=False)
 

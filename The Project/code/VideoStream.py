@@ -14,12 +14,13 @@ else:
 
 
 class VideoStream:
-    def __init__(self, source, fbae, queueSize=128):
+    def __init__(self, source, fbae, queueSize=128, sync=False):
         # initialize the file video stream along with the boolean
         # used to indicate if the thread should be stopped or not
         self.stream = cv2.VideoCapture(source)
         self.stopped = False
         self.fbae = fbae
+        self.sync = sync
 
         # initialize the queue used to store frames read from
         # the video file
@@ -29,11 +30,15 @@ class VideoStream:
         (grabbed, frame) = self.stream.read()
         self.Q.put(frame)
 
-        # start a thread to read frames from the file video stream
-        t = Thread(target=self.update, args=())
-        t.daemon = True
-        t.start()
-        return self
+        if not self.sync:
+            # start a thread to read frames from the file video stream
+            t = Thread(target=self.update, args=())
+            t.daemon = True
+            t.start()
+
+            return self
+        else:
+            self.update()
 
     def update(self):
         # keep looping infinitely
@@ -55,8 +60,17 @@ class VideoStream:
 
                 result = self.fbae.predict_image(frame)
 
-                # add the frame to the queue
-                self.Q.put(result)
+                if self.sync:
+                    cv2.imshow('img', result)
+                    cv2.waitKey(1)
+
+                    # if [esc] is pressed
+                    k = cv2.waitKey(30) & 0xff
+                    if k == 27:
+                        break
+                else:
+                    # add the frame to the queue
+                    self.Q.put(result)
 
     def read(self):
         # return next frame in the queue
