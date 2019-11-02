@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Convolution2D
+from keras.layers import Conv2D
 from keras.layers import MaxPooling2D
 from keras.layers import Flatten
 from keras.layers import Dense
@@ -16,33 +16,33 @@ import tensorflow as tf
 classifier = Sequential()
 
 # Step 1 - Convolution
-classifier.add(Convolution2D(16 , 3 , 3 ,input_shape= (16,16,3), activation = 'relu'))
+classifier.add(Conv2D(256 , (3 , 3) ,input_shape= (128,128,1), activation = 'relu'))
 
 #Step 2 - MaxPooling
 classifier.add(MaxPooling2D(pool_size=(2,2)))
 
 # #To Increase accuracy
-classifier.add(Convolution2D(16 , 3 , 3 , activation = 'relu'))
+classifier.add(Conv2D(128 , (3 , 3) , activation = 'relu'))
 classifier.add(MaxPooling2D(pool_size=(2,2)))
 
 # # #To Increase accuracy
-# classifier.add(Convolution2D(64 , 3 , 3 , activation = 'relu'))
-# classifier.add(MaxPooling2D(pool_size=(2,2)))
+classifier.add(Conv2D(64 ,( 3 , 3 ), activation = 'relu'))
+classifier.add(MaxPooling2D(pool_size=(2,2)))
 
 # # To Increase accuracy
 # classifier.add(Convolution2D(64 , 3 , 3 , activation = 'relu'))
 # classifier.add(MaxPooling2D(pool_size=(2,2)))
 
 # # To Increase accuracy
-# classifier.add(Convolution2D(64 , 3 , 3 , activation = 'relu'))
+# classifier.add(Convolution2D(32 , 3 , 3 , activation = 'relu'))
 # classifier.add(MaxPooling2D(pool_size=(2,2)))
 
 #Step 3 - Flattening
 classifier.add(Flatten())
 
 #Step 4 - Full Connented --> Neural Network
-classifier.add(Dense(128,activation='relu'))
-classifier.add(Dense(6, activation='sigmoid'))
+classifier.add(Dense(256,activation='relu'))
+classifier.add(Dense(6, activation='softmax'))
 
 
 
@@ -63,18 +63,20 @@ train_datagen = ImageDataGenerator(
 test_datagen = ImageDataGenerator(rescale=1./255)
 
 training_set = train_datagen.flow_from_directory(
-        '../datasets/ages/training',
-        target_size=(16, 16),
+        'c:/Facial-based-age-estimator-old/The Project/datasets/ages/training',
+        target_size=(128, 128),
         batch_size=8,
+        color_mode='grayscale',
         class_mode='categorical')
 
 test_Set = test_datagen.flow_from_directory(
-        '../datasets/ages/test',
-        target_size=(16, 16),
+        'c:/Facial-based-age-estimator-old/The Project/datasets/ages/test',
+        target_size=(128, 128),
         batch_size=8,
+        color_mode='grayscale',
         class_mode='categorical')
 
-#Set Callback
+#Set Callback   
 callback = EarlyStopping(monitor='val_loss',
                               min_delta=0,
                               patience=1,
@@ -82,13 +84,14 @@ callback = EarlyStopping(monitor='val_loss',
 
 classifier.fit_generator(
         training_set,
-        steps_per_epoch=43943,
+        steps_per_epoch=21104,
         epochs=1,
         validation_data=test_Set,
-        validation_steps=10779)
+        validation_steps=2347,
+        workers=0)
 
 print('Save ...')
-classifier.save('h.hdf5')
-print('Saved to  : h.hdf5')
+classifier.save('l.hdf5')
+print('Saved to  : l.hdf5')
 
 
