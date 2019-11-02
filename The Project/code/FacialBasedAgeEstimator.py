@@ -1,6 +1,9 @@
 import cv2
 import time
+from keras.models import load_model
 from VideoStream import VideoStream
+import numpy as np
+from keras.preprocessing import image
 
 
 class FacialBasedAgeEstimator:
@@ -8,6 +11,7 @@ class FacialBasedAgeEstimator:
     def __init__(self, cascade, scaleFactor=1.2):
         self.cascade = cascade
         self.scaleFactor = scaleFactor
+        self.model = load_model('model/j.hdf5')
 
     def predict_image(self, image):
         faces = self.detect_faces(image)
@@ -16,7 +20,10 @@ class FacialBasedAgeEstimator:
             x, y, w, h = face
 
             clipped_image = image[y:y + h, x:x + w]
+            clipped_image = cv2.cvtColor(clipped_image, cv2.COLOR_BGR2GRAY)
+            clipped_image = cv2.resize(clipped_image,(128,128))
 
+            #Predict the face in Model and return the label ex:=> (90%,Child)
             label = self.predict(clipped_image)
 
             self.draw_rect_and_text(image=image, face=face, text=label)
@@ -61,6 +68,39 @@ class FacialBasedAgeEstimator:
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
         cv2.putText(image, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
 
-    def predict(self, image):
-        # TODO: real prediction
-        return "baby"
+    # def predict(self, image):
+    #     # TODO: real prediction
+    #     return "baby"
+
+
+    def getCateogrical(self,num):
+        if num == 0:
+            return 'baby'
+        if num == 1:
+            return 'child'
+        if num == 2:
+            return 'middle_age'
+        if num == 3:
+            return 'senior'
+        if num == 4:
+            return 'teenager'
+        if num == 5:
+            return 'youth'
+        
+        return 'UnKnown' 
+
+    def predict(self,face_image):
+        try:
+            img_array = image.img_to_array(face_image)
+            img_array = np.expand_dims(img_array, axis=0)
+            img_class = self.model.predict(img_array)
+            img_class = img_class[0]
+            max = img_class[0]
+            max_index = None
+            for index in range(img_class.size):
+                if img_class[index] > max:
+                    max = img_class[index]
+                    max_index = index
+            return '{}% ,{} '.format(round(max * 100,2),self.getCateogrical(max_index))
+        except Exception as ex:
+            print(ex)
