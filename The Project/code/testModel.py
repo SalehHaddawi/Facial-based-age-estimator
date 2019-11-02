@@ -12,8 +12,7 @@ model_path = 'h.hdf5'
 
 model = load_model(model_path)
 
-
-img = image.load_img(path=folder_path,target_size=(16,16))
+img = image.load_img(path=folder_path, target_size=(16, 16))
 img = image.img_to_array(img)
 img = np.expand_dims(img, axis=0)
 
@@ -22,9 +21,6 @@ print(type(images))
 img_class = model.predict_classes(images)
 
 print(img_class)
-
-
-
 
 # scores = model.summary()
 
