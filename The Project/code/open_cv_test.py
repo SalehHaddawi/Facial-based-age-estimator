@@ -3,15 +3,15 @@ import cv2
 
 # ------------------------------ MAIN -------------------------------
 
-# load the module
+# # load the module
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-
-# ------------ STATIC IMAGES --------------
+#
+# # ------------ STATIC IMAGES --------------
 # scaleFactor = 1.05
 #
 # fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
 #
-# img = cv2.imread("family.jpg")
+# img = cv2.imread("doctor-john-lee-se-young.jpg")
 #
 # cv2.waitKey(0)
 #
@@ -27,5 +27,5 @@ scaleFactor = 1.15
 fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
 
 # put 0 for web cam
-fbae.predict_video(source="london_walk.mp4", sync=True)
-
+fbae.predict_video(source=0, sync=True)
+# #

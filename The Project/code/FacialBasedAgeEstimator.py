@@ -11,13 +11,15 @@ class FacialBasedAgeEstimator:
     def __init__(self, cascade, scaleFactor=1.2):
         self.cascade = cascade
         self.scaleFactor = scaleFactor
-        self.model = load_model('../../model/j.hdf5')
+        self.model = load_model('../../model/model00000002_0.11_0.90.hdf5')
 
     def predict_image(self, image):
         faces = self.detect_faces(image)
 
+        print("num of faces is {}".format(len(faces)))
+
         for face in faces:
-            face_img, clipped_image_cords = self.crop_face(image, face, margin=40)
+            face_img, clipped_image_cords = self.crop_face(image, face, margin=5)
             
             x, y, w, h = clipped_image_cords
 
@@ -103,23 +105,15 @@ class FacialBasedAgeEstimator:
         resized_img = np.array(resized_img)
         return resized_img, (x_a, y_a, x_b - x_a, y_b - y_a)
 
-    # def predict(self, image):
-    #     # TODO: real prediction
-    #     return "baby"
-
     def getCateogrical(self, num):
         if num == 0:
-            return 'baby'
+            return 'Adult'
         if num == 1:
-            return 'child'
+            return 'Child'
         if num == 2:
-            return 'middle_age'
+            return 'Senior'
         if num == 3:
-            return 'senior'
-        if num == 4:
-            return 'teenager'
-        if num == 5:
-            return 'youth'
+            return 'Young'
 
         return 'UnKnown'
 
@@ -128,13 +122,10 @@ class FacialBasedAgeEstimator:
             img_array = keras_img.img_to_array(face_image)
             img_array = np.expand_dims(img_array, axis=0)
             img_class = self.model.predict(img_array)
-            img_class = img_class[0]
-            max = img_class[0]
-            max_index = None
-            for index in range(img_class.size):
-                if img_class[index] > max:
-                    max = img_class[index]
-                    max_index = index
-            return '{}% ,{} '.format(round(max * 100, 2), self.getCateogrical(max_index))
+            img_class = list(img_class[0])
+            max1 = max(img_class)
+            max_index = img_class.index(max1)
+
+            return '{}% ,{} '.format(round(max1 * 100, 2), self.getCateogrical(max_index))
         except Exception as ex:
             print(ex)
