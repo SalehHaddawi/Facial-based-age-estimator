@@ -6,6 +6,8 @@ import math
 import time
 import cv2
 from PIL import Image
+import random
+import sys
 
 # dataset = pd.read_csv("selfie_dataset.txt", delimiter=" ")
 
@@ -76,3 +78,14 @@ from PIL import Image
 #         # missingImages.append([folder, file])
 # print(len(missingImages))
 
+
+
+
+for folder in os.listdir('The Project/datasets/ages/training'):
+    files_len = len(os.listdir('The Project/datasets/ages/training/'+folder))
+    if not os.path.exists('The Project/datasets/ages/test/'+folder):
+        os.mkdir('The Project/datasets/ages/test/'+folder)
+    for file in random.sample(os.listdir('The Project/datasets/ages/training/'+folder),int(files_len * 0.20)):
+        shutil.move('The Project/datasets/ages/training/'+folder +'/' + str(file), 'The Project/datasets/ages/test/'+folder + '/' + file)
+    sys.stdout.write('\r Moveing')
+    sys.stdout.flush()
