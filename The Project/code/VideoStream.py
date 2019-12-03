@@ -62,15 +62,19 @@ class VideoStream:
 
                 if self.sync:
                     cv2.imshow('img', result)
-                    cv2.waitKey(1)
 
                     # if [esc] is pressed
-                    k = cv2.waitKey(30) & 0xff
+                    k = cv2.waitKey(50) & 0xff
                     if k == 27:
+                        break
+                    # if window [X] button is clicked
+                    elif cv2.getWindowProperty('img', cv2.WND_PROP_VISIBLE) < 1:
                         break
                 else:
                     # add the frame to the queue
                     self.Q.put(result)
+
+        cv2.destroyAllWindows()
 
     def read(self):
         # return next frame in the queue

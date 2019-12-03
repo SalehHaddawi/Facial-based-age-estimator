@@ -20,7 +20,7 @@ class FacialBasedAgeEstimator:
     def predict_image(self, image):
         faces = self.detect_faces(image)
 
-        print("num of faces is {}".format(len(faces)))
+        # print("num of faces is {}".format(len(faces)))
 
         for face in faces:
             face_img, clipped_image_cords = self.crop_face(image, face, margin=5)
@@ -54,12 +54,15 @@ class FacialBasedAgeEstimator:
 
                 cv2.imshow("Frame", frame)
 
-                cv2.waitKey(1)
-
                 # if [esc] is pressed
-                k = cv2.waitKey(30) & 0xff
+                k = cv2.waitKey(50) & 0xff
                 if k == 27:
                     break
+                # if window [X] button is clicked
+                elif cv2.getWindowProperty('Frame', cv2.WND_PROP_VISIBLE) < 1:
+                    break
+
+                cv2.destroyAllWindows()
 
     def detect_faces(self, image):
         # convert the test image to gray scale as opencv face detector expects gray images
