@@ -67,9 +67,6 @@ middleframe.pack(pady=55)
 
 label = Label(middleframe, text="Chose a method to detect age:", font="system 15", fg="#1A3353", pady=10).pack()
 
-open_video_button = Button(frame, text='Load Video', fg='black', command=get_video)
-open_video_button.pack(side=TOP)
-
 loadimgbtn = Button(middleframe, text='Load Image', fg="#801E3A", bg="white", command=get_image, width=15).pack()
 loadvidbtn = Button(middleframe, text='Load Video', fg='#801E3A', bg="white", command=get_video, width=15).pack()
 webcambtn = Button(middleframe, text='Web Cam', fg='#801E3A', bg="white", command=open_cam, width=15).pack()
