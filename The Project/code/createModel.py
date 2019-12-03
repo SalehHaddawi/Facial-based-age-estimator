@@ -1,21 +1,26 @@
-from keras.models import Sequential
-from keras.layers import Conv2D,Dropout
-from keras.layers import MaxPooling2D,AveragePooling2D,BatchNormalization
-from keras.layers import Flatten
-from keras.layers import Dense
-from keras.optimizers import Adam,SGD
-from keras import initializers
-from keras.callbacks import ModelCheckpoint
-from keras.callbacks import EarlyStopping
-from keras.preprocessing.image import ImageDataGenerator
-from keras.metrics import categorical_accuracy,binary_accuracy
-from keras import regularizers
-import keras
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import tensorflow as tf
+print(tf.config.experimental.list_physical_devices('GPU'))
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D,Dropout
+from tensorflow.keras.layers import MaxPooling2D,AveragePooling2D,BatchNormalization
+from tensorflow.keras.layers import Flatten
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import Adam,SGD
+from tensorflow.keras import initializers
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.metrics import categorical_accuracy,binary_accuracy
+from tensorflow.keras import regularizers
+import tensorflow.keras
+# import tensorflow as tf
 import os
 
-# Test GPU
-# tf.test.is_gpu_available( cuda_only=False, min_cuda_compute_capability=None)
+
+
 
 # from keras.callbacks import ModelCheckpoint
 # from keras.models import Model, load_model, save_model, Sequential
@@ -131,7 +136,7 @@ classifier.add(Dropout(0.5))
 # classifier.add(Dropout(0.5)) 
 
 #Total Classes 
-total = len(os.listdir('The Project/datasets/ages/training'))
+total = len(os.listdir('../datasets/ages/training'))
 # , bias_initializer=initializers.Constant(0.1)
 classifier.add(Dense(total, activation='softmax'))
 
@@ -143,7 +148,7 @@ opt = SGD(lr=0.001)
 #Compiling CNN
 classifier.compile(optimizer=opt,loss='binary_crossentropy',metrics=['accuracy'])
 
-checkpoint = ModelCheckpoint("model/ep22/model{epoch:08d}_{val_loss:.2f}_{val_accuracy:.2f}.hdf5", monitor='val_loss', verbose=1,
+checkpoint = ModelCheckpoint("../../model/ep22/model{epoch:08d}_{val_loss:.2f}_{val_accuracy:.2f}.hdf5", monitor='val_loss', verbose=1,
     save_best_only=False, mode='auto', period=1)
 
 #Part 2 - Fitting the CNN to the images
@@ -159,14 +164,23 @@ train_datagen = ImageDataGenerator(
 test_datagen = ImageDataGenerator(rescale=1./255)
 
 training_set = train_datagen.flow_from_directory(
-        'The Project/datasets/ages/training',
+        '../datasets/ages/training',
         target_size=(128, 128),
         # batch_size=32,
         color_mode='grayscale',
         class_mode='categorical')
 
+print("#############")
+
+print(training_set)
+print(type(training_set))
+
+print("#############")
+
+
+
 test_Set = test_datagen.flow_from_directory(
-        'The Project/datasets/ages/test',
+        '../datasets/ages/test',
         target_size=(128, 128),
         # batch_size=32,
         color_mode='grayscale',

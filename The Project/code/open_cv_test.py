@@ -1,40 +1,51 @@
 from FacialBasedAgeEstimator import FacialBasedAgeEstimator
 import cv2
+import numpy
 from tkinter import *
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilename, askopenfile
 from PIL import Image, ImageTk
 
-face_cascade = cv2.CascadeClassifier('The Project/code/haarcascade_frontalface_default.xml')
+
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+fbae_image = FacialBasedAgeEstimator(face_cascade, 1.05)
+
+fbae_vide_cam = FacialBasedAgeEstimator(face_cascade, 1.15)
 
 
 def get_image():
-    image = askopenfilename(filetypes=[("Image", ".jpg .png .jpeg")])
-    print(image)
-    scaleFactor = 1.05
+    path = askopenfile(filetypes=[("Image", ".jpg .png .jpeg")]).name
+    # scaleFactor = 1.05
+    #
+    # fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
 
-    fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
-
-    img = cv2.imread(image)
+    stream = open(path, "rb")
+    bytes = bytearray(stream.read())
+    numpyarray = numpy.asarray(bytes, dtype=numpy.uint8)
+    bgrImage = cv2.imdecode(numpyarray, cv2.IMREAD_UNCHANGED)
 
     cv2.waitKey(0)
-    result = fbae.predict_image(img)
+    result = fbae_image.predict_image(bgrImage)
 
     cv2.imshow("img", result)
 
     cv2.waitKey(0)
 
+
 def get_video():
     video = askopenfilename(filetypes=[("Image", ".mp4 .mkv")])
-    print(video)
-    scaleFactor = 1.15
-    fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
-    fbae.predict_video(source=video, sync=True)
+    # scaleFactor = 1.15
+    # fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
+    fbae_vide_cam.predict_video(source=video, sync=True)
+
 
 def open_cam():
     scaleFactor = 1.15
     fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
     fbae.predict_video(source=0, sync=True)
 
+def close_windows():
+    fbae_image.close_image_video_cam()
 
 root = Tk()
 root.geometry('400x500')
@@ -56,6 +67,8 @@ middleframe.pack(pady=55)
 
 label = Label(middleframe, text="Chose a method to detect age:", font="system 15", fg="#1A3353", pady=10).pack()
 
+open_video_button = Button(frame, text='Load Video', fg='black', command=get_video)
+open_video_button.pack(side=TOP)
 
 loadimgbtn = Button(middleframe, text='Load Image', fg="#801E3A", bg="white", command=get_image, width=15).pack()
 loadvidbtn = Button(middleframe, text='Load Video', fg='#801E3A', bg="white", command=get_video, width=15).pack()
@@ -68,26 +81,29 @@ dev = Label(bottomframe, text="Developers: Saleh ,Nawaf and Saeed.", font="syste
 
 root.mainloop()
 
+close_button = Button(frame, text='Close', fg='black', command=close_windows())
+close_button.pack(side=TOP)
 
+root.mainloop()
 
 # # ------------------------------ MAIN -------------------------------
 
-# # load the module
-# face_cascade = cv2.CascadeClassifier('The Project/code/haarcascade_frontalface_default.xml')
-
-# # ------------ STATIC IMAGES --------------
-# # scaleFactor = 1.05
-
-# # fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
-
-# # img = cv2.imread("The Project/code/baby.jpeg")
-
-# # cv2.waitKey(0)
-# # result = fbae.predict_image(img)
-
-# # cv2.imshow("img", result)
-
-# # cv2.waitKey(0)
+# load the module
+# face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+#
+# # # ------------ STATIC IMAGES --------------
+# scaleFactor = 1.05
+#
+# fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
+#
+# img = cv2.imread("family.jpg")
+#
+# cv2.waitKey(0)
+# result = fbae.predict_image(img)
+#
+# cv2.imshow("img", result)
+#
+# cv2.waitKey(0)
 
 # # ------------ VIDEOS & WEB CAM --------------
 # # scaleFactor = 1.15
