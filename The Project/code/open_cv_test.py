@@ -47,6 +47,7 @@ def open_cam():
 
 root = Tk()
 root.geometry('400x500')
+root.resizable(False, False)
 root.title("Facial Based Age Estimator")
 frame = Frame(root)
 frame.pack(padx=30, pady=30)
@@ -63,7 +64,7 @@ img.pack()
 middleframe = Frame(frame)
 middleframe.pack(pady=55)
 
-label = Label(middleframe, text="Chose a method to estimate age:", font="system 15", fg="#1A3353", pady=10).pack()
+label = Label(middleframe, text="Choose a method to estimate age:", font="system 15", fg="#1A3353", pady=10).pack()
 
 loadimgbtn = Button(middleframe, text='Load Image', fg="#801E3A", bg="white", command=get_image, width=15).pack()
 loadvidbtn = Button(middleframe, text='Load Video', fg='#801E3A', bg="white", command=get_video, width=15).pack()
