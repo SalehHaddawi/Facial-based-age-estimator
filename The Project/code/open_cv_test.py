@@ -2,9 +2,7 @@ from FacialBasedAgeEstimator import FacialBasedAgeEstimator
 import cv2
 from tkinter import *
 from tkinter.filedialog import askopenfilename
-
-
-
+from PIL import Image, ImageTk
 
 face_cascade = cv2.CascadeClassifier('The Project/code/haarcascade_frontalface_default.xml')
 
@@ -38,22 +36,37 @@ def open_cam():
     fbae.predict_video(source=0, sync=True)
 
 
-root = Tk() 
-frame = Frame(root) 
-frame.pack() 
-bottomframe = Frame(root) 
-bottomframe.pack( side = BOTTOM ) 
-redbutton = Button(frame, text = 'Load Image', fg ='black',command=get_image) 
-redbutton.pack( side = TOP) 
-greenbutton = Button(frame, text = 'Load Video', fg='black',command=get_video) 
-greenbutton.pack( side = TOP ) 
-bluebutton = Button(frame, text ='Web Cam', fg ='black',command=open_cam) 
-bluebutton.pack( side = TOP ) 
-root.mainloop() 
+root = Tk()
+root.geometry('400x500')
+root.title("Facial Based Age Estimator")
+frame = Frame(root)
+frame.pack(padx=30, pady=30)
+
+load = Image.open("LogoAI.jpg")
+load = load.resize((250, 177), Image.ANTIALIAS)
+render = ImageTk.PhotoImage(load)
+
+img = Label(frame, image=render)
+img.image = render
+img.place(x=0, y=0)
+img.pack()
+
+middleframe = Frame(frame)
+middleframe.pack(pady=55)
+
+label = Label(middleframe, text="Chose a method to detect age:", font="system 15", fg="#1A3353", pady=10).pack()
 
 
+loadimgbtn = Button(middleframe, text='Load Image', fg="#801E3A", bg="white", command=get_image, width=15).pack()
+loadvidbtn = Button(middleframe, text='Load Video', fg='#801E3A', bg="white", command=get_video, width=15).pack()
+webcambtn = Button(middleframe, text='Web Cam', fg='#801E3A', bg="white", command=open_cam, width=15).pack()
 
+bottomframe = Frame(frame)
+bottomframe.pack()
 
+dev = Label(bottomframe, text="Developers: Saleh ,Nawaf and Saeed.", font="system 10", fg="#8192A8").pack()
+
+root.mainloop()
 
 
 
