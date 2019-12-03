@@ -4,7 +4,7 @@ import numpy
 from tkinter import *
 from tkinter.filedialog import askopenfilename, askopenfile
 
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt2.xml')
 
 fbae_image = FacialBasedAgeEstimator(face_cascade, 1.05)
 
@@ -43,9 +43,6 @@ def open_cam():
     fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
     fbae.predict_video(source=0, sync=True)
 
-def close_windows():
-    fbae_image.close_image_video_cam()
-
 
 root = Tk()
 frame = Frame(root)
@@ -61,9 +58,6 @@ open_video_button.pack(side=TOP)
 
 web_cam_button = Button(frame, text='Web Cam', fg='black', command=open_cam)
 web_cam_button.pack(side=TOP)
-
-close_button = Button(frame, text='Close', fg='black', command=close_windows())
-close_button.pack(side=TOP)
 
 root.mainloop()
 

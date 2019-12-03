@@ -4,6 +4,10 @@ from keras.models import load_model
 from VideoStream import VideoStream
 import numpy as np
 from keras.preprocessing import image as keras_img
+"""
+###### GOOD MODELS ######
+model00000002_0.38_0.82.hdf5
+"""
 
 
 class FacialBasedAgeEstimator:
@@ -11,7 +15,7 @@ class FacialBasedAgeEstimator:
     def __init__(self, cascade, scaleFactor=1.2):
         self.cascade = cascade
         self.scaleFactor = scaleFactor
-        self.model = load_model('../../model/model00000002_0.11_0.90.hdf5')
+        self.model = load_model('../../model/model00000001_0.33_0.82.hdf5')
 
     def predict_image(self, image):
         faces = self.detect_faces(image)
@@ -109,10 +113,12 @@ class FacialBasedAgeEstimator:
         if num == 0:
             return 'Adult'
         if num == 1:
-            return 'Child'
+            return 'Baby'
         if num == 2:
-            return 'Senior'
+            return 'Child'
         if num == 3:
+            return 'Senior'
+        if num == 4:
             return 'Young'
 
         return 'UnKnown'
