@@ -51,7 +51,7 @@ root.title("Facial Based Age Estimator")
 frame = Frame(root)
 frame.pack(padx=30, pady=30)
 
-load = Image.open("LogoAI.jpg")
+load = Image.open("logoAI.png")
 load = load.resize((250, 177), Image.ANTIALIAS)
 render = ImageTk.PhotoImage(load)
 
@@ -63,7 +63,7 @@ img.pack()
 middleframe = Frame(frame)
 middleframe.pack(pady=55)
 
-label = Label(middleframe, text="Chose a method to detect age:", font="system 15", fg="#1A3353", pady=10).pack()
+label = Label(middleframe, text="Chose a method to estimate age:", font="system 15", fg="#1A3353", pady=10).pack()
 
 loadimgbtn = Button(middleframe, text='Load Image', fg="#801E3A", bg="white", command=get_image, width=15).pack()
 loadvidbtn = Button(middleframe, text='Load Video', fg='#801E3A', bg="white", command=get_video, width=15).pack()
