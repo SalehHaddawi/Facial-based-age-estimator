@@ -3,6 +3,10 @@
 *.png
 *.zip
 *.tar
+*.gz
 .idea
 *.pyc
 *.mp4
+The Project/datasets/ages
+model
+venv
