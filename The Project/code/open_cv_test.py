@@ -6,7 +6,7 @@ from tkinter.filedialog import askopenfilename, askopenfile
 from PIL import Image, ImageTk
 
 
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt2.xml')
 
 fbae_image = FacialBasedAgeEstimator(face_cascade, 1.05)
 
@@ -44,8 +44,6 @@ def open_cam():
     fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
     fbae.predict_video(source=0, sync=True)
 
-def close_windows():
-    fbae_image.close_image_video_cam()
 
 root = Tk()
 root.geometry('400x500')
@@ -77,9 +75,6 @@ bottomframe.pack()
 dev = Label(bottomframe, text="Developers: Saleh ,Nawaf and Saeed.", font="system 10", fg="#8192A8").pack()
 
 root.mainloop()
-
-close_button = Button(frame, text='Close', fg='black', command=close_windows())
-close_button.pack(side=TOP)
 
 root.mainloop()
 
