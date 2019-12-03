@@ -47,6 +47,7 @@ def open_cam():
 
 root = Tk()
 root.geometry('400x500')
+root.resizable(False, False)
 root.title("Facial Based Age Estimator")
 frame = Frame(root)
 frame.pack(padx=30, pady=30)
