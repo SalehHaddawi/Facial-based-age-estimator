@@ -7,6 +7,7 @@
 .idea
 *.pyc
 *.mp4
-The Project/datasets/ages
+*.hdf5
+The Project/datasets
 model
 venv

@@ -61,14 +61,14 @@ class VideoStream:
                 result = self.fbae.predict_image(frame)
 
                 if self.sync:
-                    cv2.imshow('img', result)
+                    cv2.imshow('Preview', result)
 
                     # if [esc] is pressed
                     k = cv2.waitKey(50) & 0xff
                     if k == 27:
                         break
                     # if window [X] button is clicked
-                    elif cv2.getWindowProperty('img', cv2.WND_PROP_VISIBLE) < 1:
+                    elif cv2.getWindowProperty('Preview', cv2.WND_PROP_VISIBLE) < 1:
                         break
                 else:
                     # add the frame to the queue

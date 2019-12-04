@@ -14,10 +14,7 @@ fbae_vide_cam = FacialBasedAgeEstimator(face_cascade, 1.15)
 
 
 def get_image():
-    path = askopenfile(filetypes=[("Image", ".jpg .png .jpeg")]).name
-    # scaleFactor = 1.05
-    #
-    # fbae = FacialBasedAgeEstimator(face_cascade, scaleFactor)
+    path = askopenfilename(filetypes=[("Image", ".jpg .png .jpeg")])
 
     stream = open(path, "rb")
     bytes = bytearray(stream.read())
