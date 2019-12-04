@@ -8,8 +8,6 @@
 *.pyc
 *.mp4
 *.hdf5
-The Project/datasets
+datasets/
 model
-venv
-/The Project/datasets/
 .DS_Store

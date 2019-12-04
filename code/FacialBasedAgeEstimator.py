@@ -1,13 +1,33 @@
+"""
+Core class that provide function to predict on images, videos and web cam
+"""
+
 import cv2
 import time
 from keras.models import load_model
 from VideoStream import VideoStream
 import numpy as np
 from keras.preprocessing import image as keras_img
+
 """
 ###### GOOD MODELS ######
 model00000002_0.38_0.82.hdf5
 """
+
+
+def second_max(img_classes):
+    maxnum = max(img_classes[0], img_classes[1])
+    secondmax = min(img_classes[0], img_classes[1])
+
+    for i in range(2, len(img_classes)):
+        if img_classes[i] > maxnum:
+            secondmax = maxnum
+            maxnum = img_classes[i]
+        else:
+            if img_classes[i] > secondmax:
+                secondmax = img_classes[i]
+
+    return secondmax
 
 
 class FacialBasedAgeEstimator:
@@ -15,16 +35,20 @@ class FacialBasedAgeEstimator:
     def __init__(self, cascade, scaleFactor=1.2):
         self.cascade = cascade
         self.scaleFactor = scaleFactor
-        self.model = load_model('../model/model00000002_0.38_0.82.hdf5')
+        self.model = load_model('../models/model00000002_0.38_0.82.hdf5')
 
     def predict_image(self, image):
+        """
+        Predicting age class for a given amage
+        :param image: the image numby array
+        :return: the image after drawing rectangle with perdition
+        """
         faces = self.detect_faces(image)
-
-        # print("num of faces is {}".format(len(faces)))
 
         for face in faces:
             face_img, clipped_image_cords = self.crop_face(image, face, margin=5)
-            
+
+            # x pixel, y pixel, rect width, rect height
             x, y, w, h = clipped_image_cords
 
             clipped_image = image[y:y + h, x:x + w]
@@ -38,33 +62,15 @@ class FacialBasedAgeEstimator:
 
         return image
 
-    # if source is 0 then its a web cam
     def predict_video(self, source=0, sync=False):
-        fvs = VideoStream(source=source, fbae=self, sync=sync).start()
-
-        if not sync:
-
-            time.sleep(1.0)
-
-            # loop over frames from the video file stream
-            while fvs.more():
-
-                # grab the frame from the threaded video file stream
-                frame = fvs.read()
-
-                cv2.imshow("Frame", frame)
-
-                # if [esc] is pressed
-                k = cv2.waitKey(50) & 0xff
-                if k == 27:
-                    break
-                # if window [X] button is clicked
-                elif cv2.getWindowProperty('Frame', cv2.WND_PROP_VISIBLE) < 1:
-                    break
-
-                cv2.destroyAllWindows()
+        VideoStream(source=source, fbae=self).start()
 
     def detect_faces(self, image):
+        """
+        Detect faces in a given image
+        :param image: image as numby array
+        :return: x pixel, y pixel, rect width, rect height for each face
+        """
         # convert the test image to gray scale as opencv face detector expects gray images
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -74,12 +80,20 @@ class FacialBasedAgeEstimator:
         return faces
 
     def draw_rect_and_text(self, image, face, text=""):
+        """
+        Draw rectangle on a given image
+        :param image: image as numby array
+        :param face: face coordinates
+        :param text: text to be displayed above the rect
+        :return: the image with the text applied
+        """
         x, y, w, h = face
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
         cv2.putText(image, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36, 255, 12), 2)
 
     def crop_face(self, imgarray, section, margin=40, size=64):
         """
+        Crop part of a given image
         :param imgarray: full image
         :param section: face detected area (x, y, w, h)
         :param margin: add some margin to the face detected area to include a full head
@@ -112,29 +126,44 @@ class FacialBasedAgeEstimator:
         resized_img = np.array(resized_img)
         return resized_img, (x_a, y_a, x_b - x_a, y_b - y_a)
 
-    def getCateogrical(self, num):
-        if num == 0:
+    def get_cateogry(self, index):
+        """
+        returns the category for the given index
+        :param index: category index
+        :return: the category for the given index
+        """
+        if index == 0:
             return 'Adult'
-        if num == 1:
+        if index == 1:
             return 'Baby'
-        if num == 2:
+        if index == 2:
             return 'Child'
-        if num == 3:
+        if index == 3:
             return 'Senior'
-        if num == 4:
+        if index == 4:
             return 'Young'
 
         return 'UnKnown'
 
     def predict(self, face_image):
+        """
+        Prediction on the given image
+        :param face_image: the image to perform prediction on
+        :return: None
+        """
         try:
             img_array = keras_img.img_to_array(face_image)
             img_array = np.expand_dims(img_array, axis=0)
             img_class = self.model.predict(img_array)
             img_class = list(img_class[0])
-            max1 = max(img_class)
-            max_index = img_class.index(max1)
 
-            return '{}% ,{} '.format(round(max1 * 100, 2), self.getCateogrical(max_index))
+            max1 = max(img_class)
+            max2 = second_max(img_class)
+
+            max1_index = img_class.index(max1)
+            max2_index = img_class.index(max2)
+
+            return '{}%, {} - {}%, {}'.format(round(max1 * 100, 0), self.get_cateogry(max1_index), round(max2 * 100, 0),
+                                              self.get_cateogry(max2_index))
         except Exception as ex:
             print(ex)

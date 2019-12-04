@@ -1,5 +1,8 @@
-# import the necessary packages
-from threading import Thread
+"""
+Utility class to handle video and web cam frames
+"""
+
+
 import sys
 import cv2
 import time
@@ -14,13 +17,12 @@ else:
 
 
 class VideoStream:
-    def __init__(self, source, fbae, queueSize=128, sync=False):
+    def __init__(self, source, fbae, queueSize=128):
         # initialize the file video stream along with the boolean
         # used to indicate if the thread should be stopped or not
         self.stream = cv2.VideoCapture(source)
         self.stopped = False
         self.fbae = fbae
-        self.sync = sync
 
         # initialize the queue used to store frames read from
         # the video file
@@ -30,15 +32,7 @@ class VideoStream:
         (grabbed, frame) = self.stream.read()
         self.Q.put(frame)
 
-        if not self.sync:
-            # start a thread to read frames from the file video stream
-            t = Thread(target=self.update, args=())
-            t.daemon = True
-            t.start()
-
-            return self
-        else:
-            self.update()
+        self.update()
 
     def update(self):
         # keep looping infinitely
@@ -60,19 +54,15 @@ class VideoStream:
 
                 result = self.fbae.predict_image(frame)
 
-                if self.sync:
-                    cv2.imshow('Preview', result)
+                cv2.imshow('Preview', result)
 
-                    # if [esc] is pressed
-                    k = cv2.waitKey(50) & 0xff
-                    if k == 27:
-                        break
-                    # if window [X] button is clicked
-                    elif cv2.getWindowProperty('Preview', cv2.WND_PROP_VISIBLE) < 1:
-                        break
-                else:
-                    # add the frame to the queue
-                    self.Q.put(result)
+                # if [esc] is pressed
+                k = cv2.waitKey(50) & 0xff
+                if k == 27:
+                    break
+                # if window [X] button is clicked
+                elif cv2.getWindowProperty('Preview', cv2.WND_PROP_VISIBLE) < 1:
+                    break
 
         cv2.destroyAllWindows()
 

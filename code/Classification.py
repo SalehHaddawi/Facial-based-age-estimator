@@ -1,3 +1,8 @@
+"""
+Create training and test folders and divide the datasets to age groups (Baby, Child, Young, Adult, Senior)
+"""
+
+
 import pandas as pd
 import shutil
 import os
@@ -34,7 +39,6 @@ import sys
 #     if row[6] == 1:
 #         if os.path.isfile('images/' + row[0] + '.jpg'):
 #             shutil.move('images/'+row[0]+'.jpg', 'senior/'+row[0]+'.jpg')
-
 
 
 # For Wiki Images Classification..
@@ -79,13 +83,12 @@ import sys
 # print(len(missingImages))
 
 
-
-
-for folder in os.listdir('The Project/datasets/ages/training'):
-    files_len = len(os.listdir('The Project/datasets/ages/training/'+folder))
-    if not os.path.exists('The Project/datasets/ages/test/'+folder):
-        os.mkdir('The Project/datasets/ages/test/'+folder)
-    for file in random.sample(os.listdir('The Project/datasets/ages/training/'+folder),int(files_len * 0.20)):
-        shutil.move('The Project/datasets/ages/training/'+folder +'/' + str(file), 'The Project/datasets/ages/test/'+folder + '/' + file)
+for folder in os.listdir('../datasets/ages/training'):
+    files_len = len(os.listdir('..//datasets/ages/training/' + folder))
+    if not os.path.exists('..//datasets/ages/test/' + folder):
+        os.mkdir('The Project/datasets/ages/test/' + folder)
+    for file in random.sample(os.listdir('..//datasets/ages/training/' + folder), int(files_len * 0.20)):
+        shutil.move('..//datasets/ages/training/' + folder + '/' + str(file),
+                    '..//datasets/ages/test/' + folder + '/' + file)
     sys.stdout.write('\r Moveing')
     sys.stdout.flush()

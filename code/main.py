@@ -1,3 +1,8 @@
+"""
+Start file to run the project
+"""
+
+
 from FacialBasedAgeEstimator import FacialBasedAgeEstimator
 import cv2
 import numpy
@@ -14,25 +19,27 @@ fbae_vide_cam = FacialBasedAgeEstimator(face_cascade, 1.15)
 
 
 def get_image():
-    path = askopenfilename(filetypes=[("Image", ".jpg .png .jpeg")])
+    image_path = askopenfilename(filetypes=[("Image", ".jpg .png .jpeg")])
 
-    stream = open(path, "rb")
-    bytes = bytearray(stream.read())
-    numpyarray = numpy.asarray(bytes, dtype=numpy.uint8)
-    bgrImage = cv2.imdecode(numpyarray, cv2.IMREAD_UNCHANGED)
+    if image_path:
+        stream = open(image_path, "rb")
+        bytes = bytearray(stream.read())
+        numpyarray = numpy.asarray(bytes, dtype=numpy.uint8)
+        bgrImage = cv2.imdecode(numpyarray, cv2.IMREAD_UNCHANGED)
 
-    cv2.waitKey(0)
-    result = fbae_image.predict_image(bgrImage)
+        cv2.waitKey(0)
+        result = fbae_image.predict_image(bgrImage)
 
-    cv2.imshow("img", result)
+        cv2.imshow("img", result)
 
-    cv2.waitKey(0)
+        cv2.waitKey(0)
 
 
 def get_video():
-    video = askopenfilename(filetypes=[("Image", ".mp4 .mkv")])
+    video_path = askopenfilename(filetypes=[("Image", ".mp4 .mkv")])
 
-    fbae_vide_cam.predict_video(source=video, sync=True)
+    if video_path:
+        fbae_vide_cam.predict_video(source=video_path, sync=True)
 
 
 def open_cam():
@@ -48,7 +55,7 @@ root.title("Facial Based Age Estimator")
 frame = Frame(root)
 frame.pack(padx=30, pady=30)
 
-load = Image.open("logoAI.png")
+load = Image.open("../ui_images/logoAI.png")
 load = load.resize((250, 177), Image.ANTIALIAS)
 render = ImageTk.PhotoImage(load)
 
