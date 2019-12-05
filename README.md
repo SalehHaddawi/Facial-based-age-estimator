@@ -2,13 +2,6 @@
 
 Estiamite of person age from his face.
 
-Age classes are:
-- Baby.
-- Child.
-- Young.
-- Adult.
-- Senior.
-
 The project requires python 3.7 and the following packages:
 - tensorflow
 - keras
